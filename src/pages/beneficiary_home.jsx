@@ -7,6 +7,18 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { useState } from "react";
 
 function BeneficiaryHome() {
     const donations = [
@@ -59,13 +71,35 @@ function BeneficiaryHome() {
                         </figure>
                     </CardContent>
                     <CardFooter className="flex-row-reverse">
-                        <Button
-                            onClick={async () => {
-                                console.log('detalles')
-                            }}
-                        >
-                            Detalles
-                        </Button>
+                        <Dialog>
+                            <DialogTrigger asChild>
+                                <Button>Ver detalles</Button>
+                            </DialogTrigger>
+                            <DialogContent className="sm:max-w-[425px]">
+                                <DialogHeader>
+                                    <DialogTitle>{item.name}</DialogTitle>
+                                    <DialogDescription>
+                                        {item.description}
+                                    </DialogDescription>
+                                </DialogHeader>
+                                <div className="grid gap-4 py-4">
+                                    <figure>
+                                        <img
+                                            src={item.img_url}
+                                            alt={item.description}
+                                            className="w-full"
+                                        />
+                                    </figure>
+                                </div>
+                                <DialogFooter>
+                                    <Button
+                                        onClick={() => {
+                                            console.log('Solicitar ' + item.name);
+                                        }}
+                                    >Solicitar</Button>
+                                </DialogFooter>
+                            </DialogContent>
+                        </Dialog>
                     </CardFooter>
                 </Card>
             );
@@ -73,7 +107,7 @@ function BeneficiaryHome() {
     })
 
     return (
-        <div className="w-11/12 h-full flex justify-center items-center">
+        <div className="w-11/12 h-full flex justify-center items-center py-4">
             <div className="container w-11/12 sm:grid sm:gap-4 sm:grid-cols-1 sm:auto-rows-auto md:grid md:gap-4 md:grid-cols-3 md:auto-rows-auto lg:grid lg:gap-4 lg:grid-cols-4 lg:auto-rows-auto xl:grid xl:gap-4 xl:grid-cols-5 xl:auto-rows-auto">
                 {items}
             </div>

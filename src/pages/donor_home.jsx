@@ -1,3 +1,6 @@
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
 import { Button } from "@/components/ui/button"
 import {
     Card,
@@ -7,6 +10,35 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { DonationEdit } from "@/components/donation_edit"
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form"
+
+const formSchema = z.object({
+    name: z.string().min(3, {
+        message: "El nombre no debe estar vacío",
+    }),
+    description: z.string().min(3, {
+        message: "La descripción no debe estar vacía",
+    }),
+})
 
 function DonorHome() {
     const donations = [
@@ -42,7 +74,37 @@ function DonorHome() {
         { id: 30, name: 'Suitcase', description: 'A rolling suitcase', img_url: 'https://images.pexels.com/photos/45982/pexels-photo-45982.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2', status: 'available' }
     ];
 
+    // 1. Define your form.
+    // const form = useForm({
+    //     resolver: zodResolver(formSchema),
+    //     defaultValues: {
+    //         name: "",
+    //     },
+    // })
+
+    function SetDefaultValues(values) {
+        const form = useForm({
+            resolver: zodResolver(formSchema),
+            values
+        })
+
+        return form;
+    }
+
+    // 2. Define a submit handler.
+    function onSubmit(values) {
+        // Do something with the form values.
+        // ✅ This will be type-safe and validated.
+        console.log(values)
+    }
+
     const items = donations.map(item => {
+        const form = SetDefaultValues(
+            {
+                name: item.name,
+                description: item.description,
+            }
+        );
         return (
             <Card key={item.id} className="m">
                 <CardHeader>
@@ -60,14 +122,73 @@ function DonorHome() {
                 <CardFooter className="flex justify-between">
                     <CardDescription>{item.status}</CardDescription>
                     {
-                        item.status === 'available' ? <Button>Editar</Button> : <Button disabled>Editar</Button>
+                        item.status === 'available' ? (
+                            <Dialog className>
+                                <DialogTrigger asChild>
+                                    <Button >Editar</Button>
+                                </DialogTrigger>
+                                <DialogContent className="sm:max-w-[425px]">
+                                    <DialogHeader>
+                                        <DialogTitle>Editar donación</DialogTitle>
+                                        <DialogDescription>
+                                            {item.description}
+                                        </DialogDescription>
+                                    </DialogHeader>
+                                    <Form {...form}>
+                                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
+                                            <FormField
+                                                control={form.control}
+                                                name="name"
+                                                render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormLabel>Nombre</FormLabel>
+                                                        <FormControl>
+                                                            <Input type="text" {...field} />
+                                                        </FormControl>
+                                                        <FormMessage />
+                                                    </FormItem>
+                                                )}
+                                            />
+                                            <FormField
+                                                control={form.control}
+                                                name="description"
+                                                render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormLabel>Descripción</FormLabel>
+                                                        <FormControl>
+                                                            <Input type="text" {...field} />
+                                                        </FormControl>
+                                                        <FormMessage />
+                                                    </FormItem>
+                                                )}
+                                            />
+                                            <figure>
+                                                <img
+                                                    src={item.img_url}
+                                                    alt={item.description}
+                                                    className="w-full"
+                                                />
+                                            </figure>
+                                            <Button type="submit" className="w-full">Guardar</Button>
+                                        </form>
+                                        <Button variant="destructive" className="w-3/12"
+                                            onClick={() => {
+                                                console.log('Eliminar');
+                                            }}
+                                        >Eliminar</Button>
+                                    </Form>
+                                    <DialogFooter>
+                                    </DialogFooter>
+                                </DialogContent>
+                            </Dialog>
+                        ): <Button disabled>Editar</Button>
                     }
                 </CardFooter>
             </Card>
         );
     })
     return (
-        <div className="w-11/12 h-full flex justify-center items-center">
+        <div className="w-full h-full flex justify-center items-center py-4">
             <div className="container sm:11/12 sm:grid sm:gap-4 sm:grid-cols-1 sm:auto-rows-auto md:grid md:gap-4 md:grid-cols-3 md:auto-rows-auto lg:grid lg:gap-4 lg:grid-cols-4 lg:auto-rows-auto xl:grid xl:gap-4 xl:grid-cols-5 xl:auto-rows-auto">
                 {items}
             </div>
