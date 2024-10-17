@@ -20,7 +20,7 @@ const formSchema = z.object({
     }),
 })
 
-export function ProfileForm() {
+export function DonorForm() {
     // 1. Define your form.
     const form = useForm  ({
         resolver: zodResolver(formSchema),

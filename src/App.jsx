@@ -1,9 +1,7 @@
-import { ProfileForm } from "./pages/login_page"
+import { Router } from "./Router";
 
-export default function Home() {
+export function App() {
   return (
-    <div className="w-full h-screen flex flex-col justify-center items-center">
-      <ProfileForm />
-    </div>
+    <Router />
   )
 }
