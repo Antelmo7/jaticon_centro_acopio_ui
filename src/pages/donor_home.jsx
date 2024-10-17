@@ -30,6 +30,7 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form"
+import { useState } from "react"
 
 const formSchema = z.object({
     name: z.string().min(3, {
@@ -73,6 +74,9 @@ function DonorHome() {
         { id: 29, name: 'Bicycle', description: 'A used bicycle', img_url: 'https://images.pexels.com/photos/45982/pexels-photo-45982.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2', status: 'delivered' },
         { id: 30, name: 'Suitcase', description: 'A rolling suitcase', img_url: 'https://images.pexels.com/photos/45982/pexels-photo-45982.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2', status: 'available' }
     ];
+
+    const [showDialog, setShowDialog] = useState(false);
+    const [dataToShow, setDataToShow] = useState({});
 
     // 1. Define your form.
     // const form = useForm({
