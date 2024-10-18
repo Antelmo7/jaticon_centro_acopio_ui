@@ -33,27 +33,15 @@ function Router() {
               )}
             />
             <Route
-              path='/donor-form'
-              element={(
-                <DonorForm />
-              )}
-            />
-            <Route
-              path='/beneficiary-form'
-              element={(
-                <BeneficiaryForm />
-              )}
-            />
-            <Route
-              path='/donor-home'
+              path='/donor'
               element={(
                 <DonorHome />
               )}
             />
             <Route
-              path='/beneficiary-home'
+              path='/beneficiary'
               element={(
-                <AuthRoute><BeneficiaryHome /></AuthRoute>
+                <AuthRoute> <BeneficiaryHome /> </AuthRoute>
               )}
             />
           </Route>

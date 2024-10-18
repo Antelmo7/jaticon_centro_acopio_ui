@@ -72,7 +72,7 @@ export function BeneficiaryForm({closeForm}) {
                 ...response.data.data.beneficiary.user,
                 userType: BeneficiaryType
             });
-            navigate('/beneficiary-home');
+            navigate('/beneficiary');
             console.log(response)
         } catch (error) {
             console.log(error)
@@ -92,7 +92,7 @@ export function BeneficiaryForm({closeForm}) {
                 ...response.data.data.beneficiary.user,
                 userType: BeneficiaryType
             });
-            navigate('/beneficiary-home');
+            navigate('/beneficiary');
             console.log(response)
         } catch (error) {
             console.log(error)
