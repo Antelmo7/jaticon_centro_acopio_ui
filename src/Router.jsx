@@ -11,6 +11,7 @@ import { Home } from './pages/home'
 import { DonorHome } from './pages/donor_home'
 import { BeneficiaryHome } from './pages/beneficiary_home'
 import { BeneficiaryRoute } from './contexts/auth/BeneficiaryRoute'
+import { DonorRoute } from './contexts/auth/DonorRoute'
 
 function Router() {
   return (
@@ -34,7 +35,11 @@ function Router() {
             <Route
               path='/donor'
               element={(
-                <DonorHome />
+                <AuthRoute>
+                  <DonorRoute>
+                    <DonorHome />
+                  </DonorRoute>
+                </AuthRoute>
               )}
             />
             <Route

@@ -16,7 +16,9 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog"
 import { Fragment, useState } from "react";
-import { HiOutlineEye } from "react-icons/hi2";
+import { HiOutlineEye, HiOutlinePlusSmall } from "react-icons/hi2";
+import { AddRequest } from "@/components/request_add_form";
+import { FilterRequest } from "@/components/filters_request";
 
 function BeneficiaryHome() {
     const donations = [
@@ -54,6 +56,7 @@ function BeneficiaryHome() {
     
     const [showDialog, setShowDialog] = useState(false);
     const [dataToShow, setDataToShow] = useState({});
+    const [showAddRequest, setShowAddRequest] = useState(false);
 
     const items = donations.map(item => {
         if (item.status === 'available') {
@@ -89,8 +92,35 @@ function BeneficiaryHome() {
     })
 
     return (
-        <div className="w-11/12 h-full flex justify-center items-center py-4">
-            <div className="container w-11/12 sm:grid sm:gap-4 sm:grid-cols-1 sm:auto-rows-auto md:grid md:gap-4 md:grid-cols-3 md:auto-rows-auto lg:grid lg:gap-4 lg:grid-cols-4 lg:auto-rows-auto xl:grid xl:gap-4 xl:grid-cols-5 xl:auto-rows-auto">
+        <div className="w-full h-full flex flex-col justify-center items-start p-4">
+            <div className="w-full flex flex-row mb-4">
+                <div className="w-full flex flex-row gap-10">
+                    <h2 className="font-bold text-2xl mb-4">Donaciones disponibles</h2>
+                    <Button
+                        className="rounded-full p-3"
+                        onClick={() => {
+                            setShowAddRequest(true)
+                        }}
+                    >
+                        <HiOutlinePlusSmall />
+                    </Button>
+                </div>
+                <div className="w-full flex flex-row justify-end items-center">
+                        <FilterRequest />
+                </div>
+                {/* Dialog para agregar solicitud */}
+                <Dialog
+                    open={showAddRequest}
+                >
+                <DialogContent className="w-full sm:max-w-[425px]">
+                    <DialogHeader>
+                    <DialogTitle>Realizar solicitud</DialogTitle>
+                        </DialogHeader>
+                        <AddRequest closeForm={setShowAddRequest} />
+                </DialogContent>
+                </Dialog>
+            </div>
+            <div className="container sm:11/12 sm:grid sm:gap-4 sm:grid-cols-1 sm:auto-rows-auto md:grid md:gap-4 md:grid-cols-3 md:auto-rows-auto lg:grid lg:gap-4 lg:grid-cols-4 lg:auto-rows-auto xl:grid xl:gap-4 xl:grid-cols-5 xl:auto-rows-auto">
                 <Dialog
                     open={showDialog}
                 >
@@ -113,22 +143,12 @@ function BeneficiaryHome() {
 						<DialogFooter className="w-full">
 							<div className="w-full flex flex-row justify-between space-x-4">
 								<Button
-									className="w-6/12"
+									className=""
 									onClick={() => {
 											console.log('Solicitar ' + dataToShow.name);
 									}}
 								>
 									Solicitar
-								</Button>
-								<Button
-									className="w-6/12"
-									variant="destructive"
-									onClick={() => {
-										setShowDialog(false);
-										setDataToShow({});
-									}}
-								>
-									Cerrar
 								</Button>
 							</div>
 						</DialogFooter>

@@ -19,8 +19,7 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { DonationEdit } from "@/components/donation_edit"
+// import { Label } from "@/components/ui/label"
 import {
     Form,
     FormControl,
@@ -30,9 +29,10 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { useEffect, useState } from "react"
-import { HiOutlinePencilSquare } from "react-icons/hi2";
+import { HiOutlinePencilSquare, HiOutlinePlusSmall } from "react-icons/hi2";
 
-import { axiosClient } from "@/api/client"
+// import { axiosClient } from "@/api/client"
+import { AddDonation } from "@/components/donation_add_form"
 
 const formSchema = z.object({
     name: z.string().min(3, {
@@ -46,6 +46,7 @@ const formSchema = z.object({
 function DonorHome() {
     const [items, setItems] = useState([])
     const [showDialog, setShowDialog] = useState(false);
+    const [showAddDonation, setShowAddDonation] = useState(false);
     const [dataToShow, setDataToShow] = useState({});
 
     useEffect(() => {
@@ -103,9 +104,31 @@ function DonorHome() {
     }
 
     return (
-        
-        <div className="w-full h-full flex justify-center items-center py-4">
+        <div className="w-full h-full flex flex-col justify-center items-start p-4">
+            <div className="flex flex-row gap-10">
+                <h2 className="font-bold text-2xl mb-4">Mis donaciones</h2>
+                <Button
+                    className="rounded-full p-3"
+                    onClick={() => {
+                        setShowAddDonation(true)
+                    }}
+                >
+                    <HiOutlinePlusSmall />
+                </Button>
+                {/* Dialog para agregar donación */}
+                <Dialog
+                    open={showAddDonation}
+                >
+                <DialogContent className="w-full sm:max-w-[425px]">
+                    <DialogHeader>
+                    <DialogTitle>Realizar donación</DialogTitle>
+                        </DialogHeader>
+                        <AddDonation closeForm={setShowAddDonation}/>
+                </DialogContent>
+                </Dialog>
+            </div>
             <div className="container sm:11/12 sm:grid sm:gap-4 sm:grid-cols-1 sm:auto-rows-auto md:grid md:gap-4 md:grid-cols-3 md:auto-rows-auto lg:grid lg:gap-4 lg:grid-cols-4 lg:auto-rows-auto xl:grid xl:gap-4 xl:grid-cols-5 xl:auto-rows-auto">
+                {/* Dialog para ver donación */}
                 <Dialog
                     open={showDialog}
                 >

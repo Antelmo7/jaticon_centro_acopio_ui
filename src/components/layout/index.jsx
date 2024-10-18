@@ -31,7 +31,7 @@ function Layout() {
             <DialogHeader>
               <DialogTitle>Donador</DialogTitle>
               </DialogHeader>
-          <DonorForm />
+              <DonorForm closeForm={setShowDonorForm}/>
           <Button
             variant="destructive"
             onClick={() => {
@@ -52,7 +52,7 @@ function Layout() {
             <DialogHeader>
               <DialogTitle>Beneficiario</DialogTitle>
               </DialogHeader>
-          <BeneficiaryForm closeForm={setShowBeneficiaryForm} />
+            <BeneficiaryForm closeForm={setShowBeneficiaryForm} />
           <Button
             variant="destructive"
             onClick={() => {
@@ -93,7 +93,7 @@ function Layout() {
                 {auth.user.userType === DonorType ? (
                   <li>
                     <NavLink
-                      to='/donor-home/'
+                      to='/donor/'
                       className="text-[#45936c] font-bold"
                     >
                       Prestar ayuda

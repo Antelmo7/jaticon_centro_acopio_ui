@@ -13,6 +13,10 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { axiosClient } from "@/api/client"
+import { useAuth } from "@/contexts/auth/useAuth"
+import { DonorType } from "@/constants/user_type"
+import { useNavigate } from "react-router-dom"
 
 const formSchema_login = z.object({
     email: z.string().min(1, {
@@ -41,7 +45,9 @@ const formSchema_register = z.object({
     }),
 })
 
-export function DonorForm() {
+export function DonorForm({closeForm}) {
+    const navigate = useNavigate();
+    const auth = useAuth();
     // 1. Define your form.
     const form_login = useForm  ({
         resolver: zodResolver(formSchema_login),
@@ -51,11 +57,47 @@ export function DonorForm() {
         resolver: zodResolver(formSchema_register),
     })
 
-    // 2. Define a submit handler.
-    function onSubmit(values) {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
-        console.log(values)
+    async function onSubmitSignUp(values) {
+        try {
+            const response = await axiosClient.post('/api/auth/sign-up/donar', {
+                name: values.name,
+                lastName1: values.last_name_1,
+                lastName2: values.last_name_2,
+                email: values.email,
+                password: values.password,
+            })
+            await auth.signIn({
+                ...response.data.data.donar.user,
+                userType: DonorType
+            });
+            navigate('/donor');
+            console.log(response)
+        } catch (error) {
+            console.log(error)
+        } finally {
+            form_register.reset();
+            closeForm(false);
+        }
+    }
+    
+    async function onSubmitSignIn(values) {
+        try {
+            const response = await axiosClient.post('/api/auth/sign-in/donar', {
+                email: values.email,
+                password: values.password,
+            })
+            await auth.signIn({
+                ...response.data.data.donar.user,
+                userType: DonorType
+            });
+            navigate('/donor');
+            console.log(response)
+        } catch (error) {
+            console.log(error)
+        } finally {
+            form_login.reset();
+            closeForm(false);
+        }
     }
 
     return (
@@ -66,7 +108,7 @@ export function DonorForm() {
             </TabsList>
             <TabsContent value="login">
                 <Form {...form_login}>
-                    <form onSubmit={form_login.handleSubmit(onSubmit)} className="space-y-8 w-full">
+                    <form onSubmit={form_login.handleSubmit(onSubmitSignIn)} className="space-y-8 w-full">
                         <FormField
                             control={form_login.control}
                             name="email"
@@ -107,7 +149,7 @@ export function DonorForm() {
             </TabsContent>
             <TabsContent value="register">
                 <Form {...form_register}>
-                    <form onSubmit={form_register.handleSubmit(onSubmit)} className="space-y-8 w-full">
+                    <form onSubmit={form_register.handleSubmit(onSubmitSignUp)} className="space-y-8 w-full">
                         <FormField
                             control={form_register.control}
                             name="name"
