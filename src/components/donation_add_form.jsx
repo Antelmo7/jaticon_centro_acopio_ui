@@ -77,20 +77,20 @@ export function AddDonation({closeForm}) {
                 name="centro_acopio_id"
                 render={({ field }) => (
                     <FormItem>
-                    <FormLabel>Centro de acopío</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                        <SelectTrigger>
-                            <SelectValue placeholder="Selecciona un centro de acopío" />
-                        </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                        <SelectItem value="1">UTNogales</SelectItem>
-                        <SelectItem value="2">UTHermosillo</SelectItem>
-                        <SelectItem value="3">UTPuertoPeñasco</SelectItem>
-                        </SelectContent>
-                    </Select>
-                    <FormMessage />
+                        <FormLabel>Centro de acopío</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Selecciona un centro de acopío" />
+                            </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                            <SelectItem value="1">UTNogales</SelectItem>
+                            <SelectItem value="2">UTHermosillo</SelectItem>
+                            <SelectItem value="3">UTPuertoPeñasco</SelectItem>
+                            </SelectContent>
+                        </Select>
+                        <FormMessage />
                     </FormItem>
                 )}
                 />
@@ -99,20 +99,20 @@ export function AddDonation({closeForm}) {
                 name="category_id"
                 render={({ field }) => (
                     <FormItem>
-                    <FormLabel>Categoría</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                        <SelectTrigger>
-                            <SelectValue placeholder="Selecciona una categoría" />
-                        </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                        <SelectItem value="1">Electrodomestico</SelectItem>
-                        <SelectItem value="2">Despensa</SelectItem>
-                        <SelectItem value="3">Ropa</SelectItem>
-                        </SelectContent>
-                    </Select>
-                    <FormMessage />
+                        <FormLabel>Categoría</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Selecciona una categoría" />
+                            </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                            <SelectItem value="1">Electrodomestico</SelectItem>
+                            <SelectItem value="2">Despensa</SelectItem>
+                            <SelectItem value="3">Ropa</SelectItem>
+                            </SelectContent>
+                        </Select>
+                        <FormMessage />
                     </FormItem>
                 )}
                 />

@@ -41,7 +41,7 @@ const formSchema = z.object({
     }),
     description: z.string().min(3, {
         message: "La descripción no debe estar vacía",
-    }),
+    })
 })
 
 function DonorHome() {
@@ -49,6 +49,14 @@ function DonorHome() {
     const [showDialog, setShowDialog] = useState(false);
     const [showAddDonation, setShowAddDonation] = useState(false);
     const [dataToShow, setDataToShow] = useState({});
+    const [file, setFile] = useState(null);
+
+    const handleFileChange = (event) => {
+        const file = event.target.files[0]
+        if (file) {
+            setFile(file) // Establece el archivo en el formulario
+        }
+    }
 
     useEffect(() => {
         (async() => {
@@ -64,10 +72,6 @@ function DonorHome() {
 
     const form = useForm({
         resolver: zodResolver(formSchema),
-        defaultValues: {
-            name: dataToShow.name,
-            description: dataToShow.description
-        },
         values: {
             name: dataToShow.name,
             description: dataToShow.description
@@ -76,7 +80,38 @@ function DonorHome() {
 
     // 2. Define a submit handler.
     async function onSubmit(values) {
-        console.log(values)
+        try {
+            const formData = new FormData()
+            if (values.name) formData.append('name', values.name)
+            if (values.description) formData.append('description', values.description)
+            if (file) {
+                formData.append('image', file)
+            }
+
+            console.log(file)
+
+            await axiosClient.patch(`/api/donations/${dataToShow.id}`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                }
+            })
+
+            const itemIndex = items.findIndex(item => item.id === dataToShow.id)
+            items[itemIndex] = {
+                ...items[itemIndex],
+                name: values.name,
+                description: values.description,
+                imageUrl: (file) ? URL.createObjectURL(file) : items[itemIndex].imageUrl
+            }
+            setItems([...items])
+        } catch (error) {
+            console.error(error)
+        } finally {
+            setShowDialog(false);
+            setDataToShow({});
+            setFile(null);
+            form.reset();
+        }
     }
 
     return (
@@ -116,7 +151,7 @@ function DonorHome() {
                             </DialogDescription>
                         </DialogHeader>
                         <Form {...form}>
-                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
+                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full" encType="multipart/form-data">
                                 <FormField
                                     control={form.control}
                                     name="name"
@@ -143,6 +178,16 @@ function DonorHome() {
                                         </FormItem>
                                     )}
                                 />
+                                <div className="">
+                                    <FormLabel>Imagen</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            className="mt-2"
+                                            type="file"
+                                            onChange={handleFileChange}
+                                        />
+                                    </FormControl>
+                                </div>
                                 <figure>
                                     <img
                                         src={dataToShow.imageUrl}
@@ -178,7 +223,7 @@ function DonorHome() {
                     </DialogContent>
                 </Dialog>
                 {items.map(item => (
-                    <Card key={item.id}>
+                    <Card key={item.id} className="h-full flex flex-col justify-between">
                         <CardHeader>
                             <CardTitle>{item.name}</CardTitle>
                         </CardHeader>
