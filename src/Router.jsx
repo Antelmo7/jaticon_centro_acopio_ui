@@ -8,10 +8,9 @@ import { Layout } from '@/components/layout'
 
 import { Error404 } from '@/components/error404'
 import { Home } from './pages/home'
-import { DonorForm } from './pages/donor_form'
-import { BeneficiaryForm } from './pages/beneficiary_form'
 import { DonorHome } from './pages/donor_home'
 import { BeneficiaryHome } from './pages/beneficiary_home'
+import { BeneficiaryRoute } from './contexts/auth/BeneficiaryRoute'
 
 function Router() {
   return (
@@ -41,7 +40,11 @@ function Router() {
             <Route
               path='/beneficiary'
               element={(
-                <AuthRoute> <BeneficiaryHome /> </AuthRoute>
+                <AuthRoute>
+                  <BeneficiaryRoute>
+                    <BeneficiaryHome />
+                  </BeneficiaryRoute>
+                </AuthRoute>
               )}
             />
           </Route>

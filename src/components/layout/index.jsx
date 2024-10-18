@@ -17,7 +17,6 @@ import { BeneficiaryForm } from "@/pages/beneficiary_form"
 
 function Layout() {
   const auth = useAuth()
-  console.log(auth.user)
   const headerRef = useRef()
   const [showDonorForm, setShowDonorForm] = useState(false);
   const [showBeneficiaryForm, setShowBeneficiaryForm] = useState(false);
@@ -104,7 +103,7 @@ function Layout() {
                 {auth.user.userType === BeneficiaryType ? (
                   <li>
                     <NavLink
-                      to='/beneficiary-home/'
+                      to='/beneficiary/'
                       className="text-[#45936c] font-bold"
                     >
                       Solicitar ayuda
