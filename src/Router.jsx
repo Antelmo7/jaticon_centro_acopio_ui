@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 import { AuthProvider } from '@/contexts/auth'
-// import { AuthRoute } from '@/contexts/auth/AuthRoute'
+import { AuthRoute } from '@/contexts/auth/AuthRoute'
 // import { PublicRoute } from '@/contexts/auth/PublicRoute'
 
 import { Layout } from '@/components/layout'
@@ -53,7 +53,7 @@ function Router() {
             <Route
               path='/beneficiary-home'
               element={(
-                <BeneficiaryHome />
+                <AuthRoute><BeneficiaryHome /></AuthRoute>
               )}
             />
           </Route>

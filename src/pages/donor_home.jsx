@@ -30,6 +30,9 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { useEffect, useState } from "react"
+import { HiOutlinePencilSquare } from "react-icons/hi2";
+
+import { axiosClient } from "@/api/client"
 
 const formSchema = z.object({
     name: z.string().min(3, {
@@ -95,19 +98,18 @@ function DonorHome() {
     })
 
     // 2. Define a submit handler.
-    function onSubmit(values) {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
+    async function onSubmit(values) {
         console.log(values)
     }
 
     return (
+        
         <div className="w-full h-full flex justify-center items-center py-4">
             <div className="container sm:11/12 sm:grid sm:gap-4 sm:grid-cols-1 sm:auto-rows-auto md:grid md:gap-4 md:grid-cols-3 md:auto-rows-auto lg:grid lg:gap-4 lg:grid-cols-4 lg:auto-rows-auto xl:grid xl:gap-4 xl:grid-cols-5 xl:auto-rows-auto">
                 <Dialog
                     open={showDialog}
                 >
-                    <DialogContent className="sm:max-w-[425px]">
+                    <DialogContent className="w-full sm:max-w-[425px]">
                         <DialogHeader>
                             <DialogTitle>Editar donación</DialogTitle>
                             <DialogDescription>
@@ -151,17 +153,28 @@ function DonorHome() {
                                 </figure>
                                 <Button type="submit" className="w-full">Guardar</Button>
                             </form>
-                            <Button
-                                variant="destructive"
-                                className="w-3/12"
-                                onClick={() => {
-                                    console.log('Eliminar');
-                                }}
-                            >
-                                Eliminar
-                            </Button>
                         </Form>
-                        <DialogFooter>
+                        <DialogFooter className="w-full">
+                            <div className="w-full flex flex-row justify-between space-x-4">
+                                <Button
+                                    variant="destructive"
+                                    className="w-6/12"
+                                    onClick={() => {
+                                        console.log('Eliminar');
+                                    }}
+                                >
+                                    Eliminar
+                                </Button>
+                                <Button
+                                    className="w-6/12"
+                                    onClick={() => {
+                                        setShowDialog(false);
+                                        setDataToShow({});
+                                    }}
+                                >
+                                    Cerrar
+                                </Button>
+                            </div>
                         </DialogFooter>
                     </DialogContent>
                 </Dialog>
@@ -189,9 +202,11 @@ function DonorHome() {
                                             setDataToShow(item);
                                         }}
                                     >
-                                        Editar
+                                        <HiOutlinePencilSquare />
                                     </Button>
-                                ): <Button disabled>Editar</Button>
+                                ) : <Button disabled>
+                                        <HiOutlinePencilSquare />
+                                    </Button>
                             }
                         </CardFooter>
                     </Card>

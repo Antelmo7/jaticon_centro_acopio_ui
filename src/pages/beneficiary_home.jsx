@@ -14,11 +14,9 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { useState } from "react";
+import { Fragment, useState } from "react";
+import { HiOutlineEye } from "react-icons/hi2";
 
 function BeneficiaryHome() {
     const donations = [
@@ -53,55 +51,39 @@ function BeneficiaryHome() {
         { id: 29, name: 'Bicycle', description: 'A used bicycle', img_url: 'https://images.pexels.com/photos/45982/pexels-photo-45982.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2', status: 'delivered' },
         { id: 30, name: 'Suitcase', description: 'A rolling suitcase', img_url: 'https://images.pexels.com/photos/45982/pexels-photo-45982.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2', status: 'available' }
     ];
+    
+    const [showDialog, setShowDialog] = useState(false);
+    const [dataToShow, setDataToShow] = useState({});
 
     const items = donations.map(item => {
         if (item.status === 'available') {
             return (
-                <Card key={item.id} className="">
-                    <CardHeader>
-                        <CardTitle>{item.name}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <figure>
-                            <img
-                                src={item.img_url}
-                                alt={item.description}
-                                className="w-full"
-                            />
-                        </figure>
-                    </CardContent>
-                    <CardFooter className="flex-row-reverse">
-                        <Dialog>
-                            <DialogTrigger asChild>
-                                <Button>Ver detalles</Button>
-                            </DialogTrigger>
-                            <DialogContent className="sm:max-w-[425px]">
-                                <DialogHeader>
-                                    <DialogTitle>{item.name}</DialogTitle>
-                                    <DialogDescription>
-                                        {item.description}
-                                    </DialogDescription>
-                                </DialogHeader>
-                                <div className="grid gap-4 py-4">
-                                    <figure>
-                                        <img
-                                            src={item.img_url}
-                                            alt={item.description}
-                                            className="w-full"
-                                        />
-                                    </figure>
-                                </div>
-                                <DialogFooter>
-                                    <Button
-                                        onClick={() => {
-                                            console.log('Solicitar ' + item.name);
-                                        }}
-                                    >Solicitar</Button>
-                                </DialogFooter>
-                            </DialogContent>
-                        </Dialog>
-                    </CardFooter>
-                </Card>
+                <Fragment key={item.id}>
+                    <Card className="">
+                        <CardHeader>
+                            <CardTitle>{item.name}</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <figure>
+                                <img
+                                    src={item.img_url}
+                                    alt={item.description}
+                                    className="w-full"
+                                />
+                            </figure>
+                        </CardContent>
+                        <CardFooter className="flex-row-reverse">
+                            <Button
+                                onClick={() => {
+                                    setShowDialog(true);
+									setDataToShow(item);
+                                }}
+                            >
+                                <HiOutlineEye />
+                            </Button>
+                        </CardFooter>
+                    </Card>
+                </Fragment>
             );
         }
     })
@@ -109,6 +91,49 @@ function BeneficiaryHome() {
     return (
         <div className="w-11/12 h-full flex justify-center items-center py-4">
             <div className="container w-11/12 sm:grid sm:gap-4 sm:grid-cols-1 sm:auto-rows-auto md:grid md:gap-4 md:grid-cols-3 md:auto-rows-auto lg:grid lg:gap-4 lg:grid-cols-4 lg:auto-rows-auto xl:grid xl:gap-4 xl:grid-cols-5 xl:auto-rows-auto">
+                <Dialog
+                    open={showDialog}
+                >
+                    <DialogContent className="sm:max-w-[425px]">
+						<DialogHeader>
+							<DialogTitle>{dataToShow.name}</DialogTitle>
+							<DialogDescription>
+									{dataToShow.description}
+							</DialogDescription>
+						</DialogHeader>
+						<div className="grid gap-4 py-4">
+							<figure>
+								<img
+									src={dataToShow.img_url}
+									alt={dataToShow.description}
+									className="w-full"
+								/>
+							</figure>
+						</div>
+						<DialogFooter className="w-full">
+							<div className="w-full flex flex-row justify-between space-x-4">
+								<Button
+									className="w-6/12"
+									onClick={() => {
+											console.log('Solicitar ' + dataToShow.name);
+									}}
+								>
+									Solicitar
+								</Button>
+								<Button
+									className="w-6/12"
+									variant="destructive"
+									onClick={() => {
+										setShowDialog(false);
+										setDataToShow({});
+									}}
+								>
+									Cerrar
+								</Button>
+							</div>
+						</DialogFooter>
+                    </DialogContent>
+                </Dialog>
                 {items}
             </div>
         </div>

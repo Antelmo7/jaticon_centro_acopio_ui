@@ -14,7 +14,28 @@ import {
 import { Input } from "@/components/ui/input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
-const formSchema = z.object({
+const formSchema_login = z.object({
+    email: z.string().min(1, {
+        message: "Ingresa tu correo",
+    }),
+    password: z.string().min(8, {
+        message: "La contraseña debe tener minimo 8 caracteres",
+    }),
+})
+
+const formSchema_register = z.object({
+    name: z.string().min(1, {
+        message: "Ingresa tu nombre",
+    }),
+    last_name_1: z.string().min(1, {
+        message: "Ingresa tu primer apellido",
+    }),
+    last_name_2: z.string().min(1, {
+        message: "Ingresa tu segundo apellido",
+    }),
+    email: z.string().min(1, {
+        message: "Ingresa tu correo",
+    }),
     password: z.string().min(8, {
         message: "La contraseña debe tener minimo 8 caracteres",
     }),
@@ -22,11 +43,12 @@ const formSchema = z.object({
 
 export function DonorForm() {
     // 1. Define your form.
-    const form = useForm  ({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-            email: "",
-        },
+    const form_login = useForm  ({
+        resolver: zodResolver(formSchema_login),
+    })
+    
+    const form_register = useForm({
+        resolver: zodResolver(formSchema_register),
     })
 
     // 2. Define a submit handler.
@@ -37,16 +59,16 @@ export function DonorForm() {
     }
 
     return (
-        <Tabs defaultValue="login" className="w-11/12 sm:w-8/12 xl:w-6/12">
+        <Tabs defaultValue="login" className="w-full">
             <TabsList className="w-full">
                 <TabsTrigger className="w-full" value="login">Inicio de Sesión</TabsTrigger>
                 <TabsTrigger className="w-full" value="register">Registro</TabsTrigger>
             </TabsList>
             <TabsContent value="login">
-                <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
+                <Form {...form_login}>
+                    <form onSubmit={form_login.handleSubmit(onSubmit)} className="space-y-8 w-full">
                         <FormField
-                            control={form.control}
+                            control={form_login.control}
                             name="email"
                             render={({ field }) => (
                                 <FormItem>
@@ -59,7 +81,7 @@ export function DonorForm() {
                             )}
                         />
                         <FormField
-                            control={form.control}
+                            control={form_login.control}
                             name="password"
                             render={({ field }) => (
                                 <FormItem>
@@ -71,15 +93,23 @@ export function DonorForm() {
                                 </FormItem>
                             )}
                         />
-                        <Button type="submit">Iniciar Sesión</Button>
+                        <Button
+                            className="w-full"
+                            type="submit"
+                            onClick={() => {
+                                console.log('Login donor')
+                            }}
+                        >
+                            Iniciar Sesión
+                        </Button>
                     </form>
                 </Form>
             </TabsContent>
             <TabsContent value="register">
-                <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
+                <Form {...form_register}>
+                    <form onSubmit={form_register.handleSubmit(onSubmit)} className="space-y-8 w-full">
                         <FormField
-                            control={form.control}
+                            control={form_register.control}
                             name="name"
                             render={({ field }) => (
                                 <FormItem>
@@ -92,7 +122,7 @@ export function DonorForm() {
                             )}
                         />
                         <FormField
-                            control={form.control}
+                            control={form_register.control}
                             name="last_name_1"
                             render={({ field }) => (
                                 <FormItem>
@@ -105,7 +135,7 @@ export function DonorForm() {
                             )}
                         />
                         <FormField
-                            control={form.control}
+                            control={form_register.control}
                             name="last_name_2"
                             render={({ field }) => (
                                 <FormItem>
@@ -118,7 +148,7 @@ export function DonorForm() {
                             )}
                         />
                         <FormField
-                            control={form.control}
+                            control={form_register.control}
                             name="email"
                             render={({ field }) => (
                                 <FormItem>
@@ -131,7 +161,7 @@ export function DonorForm() {
                             )}
                         />
                         <FormField
-                            control={form.control}
+                            control={form_register.control}
                             name="password"
                             render={({ field }) => (
                                 <FormItem>
@@ -143,7 +173,15 @@ export function DonorForm() {
                                 </FormItem>
                             )}
                         />
-                        <Button type="submit">Registrarme</Button>
+                        <Button
+                            className="w-full"
+                            type="submit"
+                            onClick={() => {
+                                console.log('Register donor')
+                            }}
+                        >
+                            Registrarme
+                        </Button>
                     </form>
                 </Form>
             </TabsContent>

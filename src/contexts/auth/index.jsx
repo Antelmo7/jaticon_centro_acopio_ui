@@ -1,3 +1,4 @@
+import { axiosClient } from '@/api/client'
 import { UserKey } from '@/constants/local_storage'
 import { createContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -35,7 +36,7 @@ function AuthProvider({ children }) {
   }
 
   const logout = async () => {
-    // await authUseCase.signOut()
+    await axiosClient.post('/api/auth/sign-out')
 
     localStorage.removeItem(UserKey)
     setUser(undefined)

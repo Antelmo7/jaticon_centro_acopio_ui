@@ -13,40 +13,106 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { axiosClient } from "@/api/client"
+import { useAuth } from "@/contexts/auth/useAuth"
+import { BeneficiaryType } from "@/constants/user_type"
+import { useNavigate } from "react-router-dom"
 
-const formSchema = z.object({
+const formSchema_login = z.object({
+    email: z.string().min(1, {
+        message: "Ingresa tu correo",
+    }),
     password: z.string().min(8, {
         message: "La contraseña debe tener minimo 8 caracteres",
     }),
 })
 
-export function BeneficiaryForm() {
+const formSchema_register = z.object({
+    name: z.string().min(1, {
+        message: "Ingresa tu nombre",
+    }),
+    last_name_1: z.string().min(1, {
+        message: "Ingresa tu primer apellido",
+    }),
+    last_name_2: z.string().min(1, {
+        message: "Ingresa tu segundo apellido",
+    }),
+    email: z.string().min(1, {
+        message: "Ingresa tu correo",
+    }),
+    password: z.string().min(8, {
+        message: "La contraseña debe tener minimo 8 caracteres",
+    }),
+})
+
+// eslint-disable-next-line react/prop-types
+export function BeneficiaryForm({closeForm}) {
+    const navigate = useNavigate();
+    const auth = useAuth();
     // 1. Define your form.
-    const form = useForm({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-            email: "",
-        },
+    const form_login = useForm  ({
+        resolver: zodResolver(formSchema_login),
+    })
+    
+    const form_register = useForm({
+        resolver: zodResolver(formSchema_register),
     })
 
-    // 2. Define a submit handler.
-    function onSubmit(values) {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
-        console.log(values)
+    
+    async function onSubmitSignUp(values) {
+        try {
+            const response = await axiosClient.post('/api/auth/sign-up/beneficiary', {
+                name: values.name,
+                lastName1: values.last_name_1,
+                lastName2: values.last_name_2,
+                email: values.email,
+                password: values.password,
+            })
+            await auth.signIn({
+                ...response.data.data.beneficiary.user,
+                userType: BeneficiaryType
+            });
+            navigate('/beneficiary-home');
+            console.log(response)
+        } catch (error) {
+            console.log(error)
+        } finally {
+            form_register.reset();
+            closeForm(false);
+        }
+    }
+    
+    async function onSubmitSignIn(values) {
+        try {
+            const response = await axiosClient.post('/api/auth/sign-in/beneficiary', {
+                email: values.email,
+                password: values.password,
+            })
+            await auth.signIn({
+                ...response.data.data.beneficiary.user,
+                userType: BeneficiaryType
+            });
+            navigate('/beneficiary-home');
+            console.log(response)
+        } catch (error) {
+            console.log(error)
+        } finally {
+            form_login.reset();
+            closeForm(false);
+        }
     }
 
     return (
-        <Tabs defaultValue="login" className="w-11/12 sm:w-8/12 xl:w-6/12">
+        <Tabs defaultValue="login" className="w-full">
             <TabsList className="w-full">
                 <TabsTrigger className="w-full" value="login">Inicio de Sesión</TabsTrigger>
                 <TabsTrigger className="w-full" value="register">Registro</TabsTrigger>
             </TabsList>
-            <TabsContent value="login">
-                <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
+            <TabsContent value="login" className="w-full">
+                <Form {...form_login}>
+                    <form onSubmit={form_login.handleSubmit(onSubmitSignIn)} className="space-y-8 w-full">
                         <FormField
-                            control={form.control}
+                            control={form_login.control}
                             name="email"
                             render={({ field }) => (
                                 <FormItem>
@@ -59,7 +125,7 @@ export function BeneficiaryForm() {
                             )}
                         />
                         <FormField
-                            control={form.control}
+                            control={form_login.control}
                             name="password"
                             render={({ field }) => (
                                 <FormItem>
@@ -71,15 +137,20 @@ export function BeneficiaryForm() {
                                 </FormItem>
                             )}
                         />
-                        <Button type="submit">Iniciar Sesión</Button>
+                        <Button
+                            className="w-full"
+                            type="submit"
+                        >
+                            Iniciar Sesión
+                        </Button>
                     </form>
                 </Form>
             </TabsContent>
             <TabsContent value="register">
-                <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
+                <Form {...form_register}>
+                    <form onSubmit={form_register.handleSubmit(onSubmitSignUp)} className="space-y-8 w-full">
                         <FormField
-                            control={form.control}
+                            control={form_register.control}
                             name="name"
                             render={({ field }) => (
                                 <FormItem>
@@ -92,7 +163,7 @@ export function BeneficiaryForm() {
                             )}
                         />
                         <FormField
-                            control={form.control}
+                            control={form_register.control}
                             name="last_name_1"
                             render={({ field }) => (
                                 <FormItem>
@@ -105,7 +176,7 @@ export function BeneficiaryForm() {
                             )}
                         />
                         <FormField
-                            control={form.control}
+                            control={form_register.control}
                             name="last_name_2"
                             render={({ field }) => (
                                 <FormItem>
@@ -118,7 +189,7 @@ export function BeneficiaryForm() {
                             )}
                         />
                         <FormField
-                            control={form.control}
+                            control={form_register.control}
                             name="email"
                             render={({ field }) => (
                                 <FormItem>
@@ -131,7 +202,7 @@ export function BeneficiaryForm() {
                             )}
                         />
                         <FormField
-                            control={form.control}
+                            control={form_register.control}
                             name="password"
                             render={({ field }) => (
                                 <FormItem>
@@ -143,7 +214,15 @@ export function BeneficiaryForm() {
                                 </FormItem>
                             )}
                         />
-                        <Button type="submit">Registrarme</Button>
+                        <Button
+                            className="w-full"
+                            type="submit"
+                            onClick={() => {
+                                console.log('Register beneficiary')
+                            }}
+                        >
+                            Registrarme
+                        </Button>
                     </form>
                 </Form>
             </TabsContent>

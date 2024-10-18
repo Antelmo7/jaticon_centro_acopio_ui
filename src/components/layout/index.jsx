@@ -2,22 +2,79 @@ import { useAuth } from "@/contexts/auth/useAuth"
 import { useRef } from "react"
 import { NavLink, Outlet } from "react-router-dom"
 import { BeneficiaryType, DonorType } from "@/constants/user_type"
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import {
+    Dialog,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog"
+
+import { DonorForm } from "@/pages/donor_form"
+import { BeneficiaryForm } from "@/pages/beneficiary_form"
 
 function Layout() {
   const auth = useAuth()
+  console.log(auth.user)
   const headerRef = useRef()
+  const [showDonorForm, setShowDonorForm] = useState(false);
+  const [showBeneficiaryForm, setShowBeneficiaryForm] = useState(false);
 
   return (
-    <>
+    <div className="w-full h-full">
+      {/* Donor form */}
+      <Dialog
+        open={showDonorForm}
+      >
+        <DialogContent className="w-full overflow-y-auto max-h-[80vh]">
+            <DialogHeader>
+              <DialogTitle>Donador</DialogTitle>
+              </DialogHeader>
+          <DonorForm />
+          <Button
+            variant="destructive"
+            onClick={() => {
+              setShowDonorForm(false)
+            }}
+          >
+            Cerrar
+          </Button>
+            <DialogFooter>
+            </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      {/* Beneficiary form */}
+      <Dialog
+        open={showBeneficiaryForm}
+      >
+        <DialogContent className="w-full overflow-y-auto max-h-[80vh]">
+            <DialogHeader>
+              <DialogTitle>Beneficiario</DialogTitle>
+              </DialogHeader>
+          <BeneficiaryForm closeForm={setShowBeneficiaryForm} />
+          <Button
+            variant="destructive"
+            onClick={() => {
+              setShowBeneficiaryForm(false)
+            }}
+          >
+            Cerrar
+          </Button>
+            <DialogFooter>
+            </DialogFooter>
+        </DialogContent>
+      </Dialog>
       <header
         ref={headerRef}
-        className="w-full h-16 flex justify-between items-center bg-black text-white px-4"
+        className="w-full h-16 flex justify-between items-center bg-[#f1f4e5] text-white px-4"
       >
         <figure className="">
           <NavLink to='/'>
             <img
-              className="h-8"
-              src="https://placehold.jp/150x150.png"
+              className="h-20"
+              src="src\assets\utda_logo-min.png"
               alt="Logo UTda"
             />
           </NavLink>
@@ -26,6 +83,7 @@ function Layout() {
           <ul className="w-full flex space-x-4">
             <li>
               <NavLink
+                  className="text-[#45936c] font-bold"
                 to='/'
               >
                 Inicio
@@ -36,7 +94,8 @@ function Layout() {
                 {auth.user.userType === DonorType ? (
                   <li>
                     <NavLink
-                      to='/donor/'
+                      to='/donor-home/'
+                      className="text-[#45936c] font-bold"
                     >
                       Prestar ayuda
                     </NavLink>
@@ -45,7 +104,8 @@ function Layout() {
                 {auth.user.userType === BeneficiaryType ? (
                   <li>
                     <NavLink
-                      to='/beneficiary/'
+                      to='/beneficiary-home/'
+                      className="text-[#45936c] font-bold"
                     >
                       Solicitar ayuda
                     </NavLink>
@@ -56,6 +116,7 @@ function Layout() {
                     onClick={async () => {
                       auth.logout()
                     }}
+                    className="text-[#45936c] font-bold"
                   >
                     Cerrar sesión
                   </button>
@@ -64,18 +125,20 @@ function Layout() {
             ) : (
               <>
                 <li>
-                  <button
+                    <button
+                      className="text-[#45936c] font-bold"
                     onClick={async () => {
-                      console.log('donante')
+                        setShowDonorForm(true);
                     }}
                   >
                     Donante
                   </button>
                 </li>
                 <li>
-                  <button
+                    <button
+                      className="text-[#45936c] font-bold"
                     onClick={async () => {
-                      console.log('beneficiario')
+                        setShowBeneficiaryForm(true);
                     }}
                   >
                     Beneficiario
@@ -97,7 +160,7 @@ function Layout() {
       <footer>
 
       </footer>
-    </>
+    </div>
   )
 }
 
