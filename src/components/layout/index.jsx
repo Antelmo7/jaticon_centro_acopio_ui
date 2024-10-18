@@ -79,7 +79,7 @@ function Layout() {
           </NavLink>
         </figure>
         <nav className="list-none">
-          <ul className="w-full flex space-x-4">
+          <ul className="w-full flex text-sm space-x-2 sm:space-x-4">
             <li>
               <NavLink
                   className="text-[#45936c] font-bold"
@@ -151,7 +151,7 @@ function Layout() {
       <main
         className="w-full flex flex-col justify-center items-center overflow-y-auto"
         style={{
-          minHeight: `calc(100vh - ${headerRef.current?.clientHeight}px)`
+          height: `calc(100vh - ${headerRef.current?.clientHeight}px)`
         }}
       >
         <Outlet />

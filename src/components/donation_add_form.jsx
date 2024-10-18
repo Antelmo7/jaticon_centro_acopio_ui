@@ -26,6 +26,7 @@ const formSchema = z.object({
     }),
 })
 
+// eslint-disable-next-line react/prop-types
 export function AddDonation({closeForm}) {
     // 1. Define your form.
     const form = useForm({

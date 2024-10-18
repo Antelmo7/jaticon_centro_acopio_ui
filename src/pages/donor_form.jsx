@@ -45,16 +45,28 @@ const formSchema_register = z.object({
     }),
 })
 
+// eslint-disable-next-line react/prop-types
 export function DonorForm({closeForm}) {
     const navigate = useNavigate();
     const auth = useAuth();
     // 1. Define your form.
     const form_login = useForm  ({
         resolver: zodResolver(formSchema_login),
+        defaultValues: {
+            email: "",
+            password: "",
+        }
     })
     
     const form_register = useForm({
         resolver: zodResolver(formSchema_register),
+        defaultValues: {
+            name: "",
+            last_name_1: "",
+            last_name_2: "",
+            email: "",
+            password: "",
+        }
     })
 
     async function onSubmitSignUp(values) {
